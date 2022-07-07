@@ -1,19 +1,28 @@
 <template>
   <div id="app">
-    <canvas id="demo3" ref="demo3" width="650" height="400"></canvas>
+    <Game></Game>
+    <TensorFlow></TensorFlow>
   </div>
 </template>
 
 <script>
-// import createjs from 'createjs-cmd'
+import TensorFlow from '@/components/TensorFlow.vue'
+import Game from '@/components/Game.vue'
 export default {
-  mounted() {
-    this.init()
-  },
-  methods: {
-    init() {}
+  name: 'app',
+  components: {
+    TensorFlow,
+    Game
   }
 }
 </script>
 
-<style lang="less"></style>
+<style lang="less">
+* {
+  padding: 0;
+  margin: 0;
+}
+#app {
+  display: flex;
+}
+</style>
