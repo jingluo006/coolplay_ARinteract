@@ -13,7 +13,7 @@ export class Webcam {
     return tf.tidy(() => {
       // 将图片转为tensor [224, 224, 3]
       const webcamImage = tf.browser.fromPixels(this.webcamElement)
-      // 翻转
+      // 翻转 (保证是镜像的)
       const reverseImage = webcamImage.reverse(1)
       // 裁剪(调用下面的方法)
       const cropImage = this.cropImage(reverseImage)
@@ -35,7 +35,7 @@ export class Webcam {
     const centerWidth = img.shape[1] / 2
     const beginWidth = centerWidth - size / 2
     // 3、用slice 方法裁剪 (第一个参数是三个维度开始的位置，第二个参数为裁剪的尺寸)
-    return img.slice([beginHeight, beginWidth, 0], [size, size, 0])
+    return img.slice([beginHeight, beginWidth, 0], [size, size, 3])
   }
 
   // 调整图像大小
