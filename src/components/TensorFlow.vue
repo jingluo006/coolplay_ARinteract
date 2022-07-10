@@ -127,10 +127,10 @@
 </template>
 
 <script>
-// import createjs from 'createjs-cmd'
 import * as tf from '@tensorflow/tfjs'
 import { Webcam } from '@/utils/webcam.js'
 import { Dataset } from '@/utils/dataset.js'
+import { mapMutations } from 'vuex'
 export default {
   data() {
     return {
@@ -197,7 +197,6 @@ export default {
     // 绘制预览图
     drawThumb(img, label) {
       if (this.thumbDisplayed[label] == null) {
-        // const ref = this.THUMB[label] + '-thumb'
         const thumbCanvas = document.getElementById(this.THUMB[label] + '-thumb')
         this.draw(img, thumbCanvas)
       }
@@ -270,13 +269,19 @@ export default {
         })
 
         const classId = await predictedClass.dataSync()[0]
-        console.log(classId)
+        // 通过Vuex 共享预测结果
+        this.updatePre(classId)
 
         predictedClass.dispose()
         // 视频生成的帧可能比js 分帧快，或js 分帧比视频生成快，nextFrame可以避免一个帧被处理两次
         await tf.nextFrame()
       }
     },
+
+    // 预测数据传递到Vuex中
+    ...mapMutations(['updatePre']),
+    // 开始和结束游戏
+    ...mapMutations(['isStart']),
 
     // 调用样本训练函数
     async doTraining() {
@@ -291,11 +296,13 @@ export default {
     // 开始游戏
     startPredict() {
       this.isPredicting = true
+      this.isStart(true)
       this.predict()
     },
     // 结束游戏
     stopPredict() {
       this.isPredicting = false
+      this.isStart(false)
       this.predict()
     },
     async init() {
